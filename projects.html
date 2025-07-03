@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zetsu's Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .modal {
+        display: none;
+      }
+      .modal.active {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white font-sans min-h-screen">
+    <div class="container mx-auto px-6 py-24">
+      <h1 class="text-4xl font-bold mb-10 text-center">Projects Gallery</h1>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Repeat this block for each image/video -->
+        <div class="cursor-pointer" onclick="openModal('img1')">
+          <img src="thumb1.jpg" alt="Project 1" class="rounded-lg w-full h-64 object-cover" />
+        </div>
+        <div class="cursor-pointer" onclick="openModal('img2')">
+          <img src="thumb2.jpg" alt="Project 2" class="rounded-lg w-full h-64 object-cover" />
+        </div>
+        <div class="cursor-pointer" onclick="openModal('vid1')">
+          <video src="preview1.mp4" class="rounded-lg w-full h-64 object-cover" muted autoplay loop></video>
+        </div>
+        <!-- Add more thumbnails as needed -->
+      </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal" class="modal fixed inset-0 bg-black bg-opacity-80 items-center justify-center z-50" onclick="closeModal()">
+      <div class="max-w-4xl max-h-[80vh] overflow-auto">
+        <img id="modal-img1" src="full1.jpg" class="hidden max-w-full max-h-[80vh] mx-auto rounded-lg" />
+        <img id="modal-img2" src="full2.jpg" class="hidden max-w-full max-h-[80vh] mx-auto rounded-lg" />
+        <video id="modal-vid1" src="video1.mp4" controls class="hidden max-w-full max-h-[80vh] mx-auto rounded-lg"></video>
+      </div>
+    </div>
+
+    <script>
+      function openModal(id) {
+        document.getElementById('modal').classList.add('active');
+        document.querySelectorAll('#modal img, #modal video').forEach(el => el.classList.add('hidden'));
+        document.getElementById('modal-' + id).classList.remove('hidden');
+      }
+      function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+      }
+    </script>
+  </body>
+</html>
