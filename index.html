@@ -6,13 +6,13 @@
     <title>Zetsu's Creations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      html, body { height: 100%; margin: 0; }
-      /* Hide scrollbar */
-      .scrollbar-hide::-webkit-scrollbar { display: none; }
-      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-      /* Arrow buttons */
-      .arrow-btn { background: rgba(31,41,55,.7); width:3rem; height:3rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; color:#fff; cursor:pointer; transition:background .3s; }
-      .arrow-btn:hover { background: rgba(252,211,77,.9); color:#000; }
+      html,body{height:100%;margin:0;}
+      .scrollbar-hide::-webkit-scrollbar{display:none;}
+      .scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none;}
+      .arrow-btn{background:rgba(31,41,55,.7);width:3rem;height:3rem;border-radius:9999px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;transition:background .3s;}
+      .arrow-btn:hover{background:rgba(252,211,77,.9);color:#000;}
+      .modal{display:none;}
+      .modal.active{display:flex;}
     </style>
   </head>
   <body class="bg-cover bg-center bg-no-repeat font-sans text-white" style="background-image:url('/zetsus-creations/background.png');height:100%;">
@@ -43,11 +43,23 @@
 
         <div id="carouselSlides" class="overflow-hidden w-[20rem] max-w-[90rem] h-[30rem] max-h-[90rem] rounded-lg shadow-lg">
           <div class="flex transition-transform duration-500 ease-in-out" style="transform:translateX(0);">
-            <img src="full1.png" alt="Slide 1" class="w-45 h-65 object-contain flex-none" />
-            <img src="full2.png" alt="Slide 2" class="w-25 h-25 object-contain flex-none" />
-            <!--<video class="w-full max-h-64rem object-contain flex-none" controls preload="metadata">
-              <source src="carousel3.mp4" type="video/mp4" />
-            </video> -->
+            <!-- Slide 1 -->
+            <div class="relative w-full h-full flex-none cursor-pointer slide" data-title="Concept Art 1">
+              <img src="full1.png" alt="Slide 1" class="w-full h-full object-contain" />
+              <div class="absolute bottom-0 w-full bg-black bg-opacity-60 text-center text-sm py-1">Concept Art 1</div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="relative w-full h-full flex-none cursor-pointer slide" data-title="Concept Art 2">
+              <img src="full12.png" alt="Slide 2" class="w-full h-full object-contain" />
+              <div class="absolute bottom-0 w-full bg-black bg-opacity-60 text-center text-sm py-1">Concept Art 2</div>
+            </div>
+            <!-- Slide 3 (Video) -->
+            <div class="relative w-full h-full flex-none cursor-pointer slide" data-title="Showreel">
+              <video class="w-full h-full object-contain" muted>
+                <source src="carousel3.mp4" type="video/mp4" />
+              </video>
+              <div class="absolute bottom-0 w-full bg-black bg-opacity-60 text-center text-sm py-1">Showreel</div>
+            </div>
           </div>
         </div>
 
@@ -65,9 +77,20 @@
         <div class="flex-shrink-0 flex gap-4">
           <img src="sideimage1.png" alt="About 1" class="w-48 lg:w-56 object-contain rounded-lg shadow-lg" />
           <img src="sideimage2.png" alt="About 2" class="w-48 lg:w-56 object-contain rounded-lg shadow-lg" />
+          <img src="sideimage3.png" alt="About 3" class="w-48 lg:w-56 object-contain rounded-lg shadow-lg" />
         </div>
       </div>
     </section>
+
+    <!-- Modal for enlarged view -->
+    <div id="mediaModal" class="modal fixed inset-0 bg-black bg-opacity-80 items-center justify-center z-50">
+      <div class="max-w-5xl max-h-[90vh] p-4">
+        <span id="modalClose" class="text-white text-3xl font-bold cursor-pointer absolute top-6 right-6">&times;</span>
+        <h3 id="modalTitle" class="text-center text-xl mb-4"></h3>
+        <img id="modalImg" class="hidden w-full max-h-[80vh] object-contain mx-auto" />
+        <video id="modalVideo" class="hidden w-full max-h-[80vh] mx-auto" controls></video>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-black bg-opacity-80 text-center py-6 text-gray-400">© 2025 Zetsu's Creations. All rights reserved.</footer>
@@ -75,11 +98,40 @@
     <script>
       (()=>{
         const slideTrack=document.querySelector('#carouselSlides>div');
-        const total=slideTrack.children.length;
-        let idx=0;
+        const slides=[...document.querySelectorAll('.slide')];
+        const total=slides.length;let idx=0;
         const update=()=>{slideTrack.style.transform=`translateX(${-idx*100}%)`;};
         document.getElementById('prevBtn').onclick=()=>{idx=(idx-1+total)%total;update();};
         document.getElementById('nextBtn').onclick=()=>{idx=(idx+1)%total;update();};
+
+        /* Modal logic */
+        const modal=document.getElementById('mediaModal');
+        const modalImg=document.getElementById('modalImg');
+        const modalVideo=document.getElementById('modalVideo');
+        const modalTitle=document.getElementById('modalTitle');
+        const closeBtn=document.getElementById('modalClose');
+        const openModal=(src,type,title)=>{
+          modal.classList.add('active');
+          modalTitle.textContent=title||'';
+          if(type==='img'){
+            modalVideo.classList.add('hidden');
+            modalImg.src=src;modalImg.classList.remove('hidden');
+          }else{
+            modalImg.classList.add('hidden');
+            modalVideo.src=src;modalVideo.classList.remove('hidden');
+            modalVideo.play();
+          }
+        };
+        slides.forEach(slide=>{
+          slide.addEventListener('click',()=>{
+            const title=slide.dataset.title||'';
+            const media=slide.querySelector('img,video');
+            if(media.tagName.toLowerCase()==='img')openModal(media.src,'img',title);
+            else openModal(media.querySelector('source').src,'video',title);
+          });
+        });
+        const closeModal=()=>{modal.classList.remove('active');modalImg.src='';modalVideo.pause();modalVideo.src='';};
+        modal.addEventListener('click',e=>{if(e.target===modal||e.target===closeBtn)closeModal();});
       })();
     </script>
   </body>
