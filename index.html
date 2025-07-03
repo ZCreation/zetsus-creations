@@ -10,13 +10,31 @@
         height: 100%;
         margin: 0;
       }
-      /* Optional: Hide scrollbar for all browsers */
+      /* Hide scrollbar */
       .scrollbar-hide::-webkit-scrollbar {
         display: none;
       }
       .scrollbar-hide {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      /* Arrow button styles */
+      .arrow-btn {
+        background: rgba(31, 41, 55, 0.7); /* bg-gray-800 with opacity */
+        border-radius: 9999px; /* rounded-full */
+        width: 3rem; /* w-12 */
+        height: 3rem; /* h-12 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s;
+      }
+      .arrow-btn:hover {
+        background: rgba(252, 211, 77, 0.9); /* yellow-400 */
+        color: #000;
       }
     </style>
   </head>
@@ -37,23 +55,67 @@
       </div>
     </nav>
 
-    <!-- Hero Section with carousel -->
-    <section id="home" class="h-screen flex flex-col items-center justify-start pt-20 px-6 lg:px-20 bg-black bg-opacity-40">
-      <!-- Welcome Text moved higher -->
+    <!-- Hero Section with slider -->
+    <section
+      id="home"
+      class="h-screen flex flex-col items-center justify-start pt-20 px-6 lg:px-20 bg-black bg-opacity-40"
+    >
+      <!-- Welcome Text -->
       <div class="text-center max-w-lg mb-8">
         <h2 class="text-4xl lg:text-6xl font-bold mb-4">Welcome to Zetsu's Creations</h2>
         <p class="text-lg text-gray-300">Crafting digital experiences with style and precision.</p>
       </div>
 
-      <!-- Carousel of images/videos -->
-      <div class="w-full max-w-6xl overflow-x-auto scrollbar-hide flex gap-4 pb-4">
-        <img src="carousel1.png" alt="Carousel Image 1" class="w-48 h-32 object-cover rounded-lg shadow-lg flex-shrink-0" />
-        <img src="carousel2.png" alt="Carousel Image 2" class="w-48 h-32 object-cover rounded-lg shadow-lg flex-shrink-0" />
-        <video class="w-48 h-32 rounded-lg shadow-lg flex-shrink-0" controls>
-          <source src="carousel3.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <!-- Add more images/videos as needed -->
+      <!-- Carousel Container -->
+      <div class="relative w-full max-w-3xl flex items-center justify-center">
+        <!-- Left Arrow -->
+        <button
+          id="prevBtn"
+          aria-label="Previous"
+          class="arrow-btn absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 select-none"
+        >
+          &#8592;
+        </button>
+
+        <!-- Slides Wrapper -->
+        <div
+          id="carouselSlides"
+          class="overflow-hidden w-full rounded-lg shadow-lg"
+          style="height: 256px;" /* 64 * 4 = 256px, matches h-64 */
+        >
+          <div
+            class="flex transition-transform duration-500 ease-in-out"
+            style="transform: translateX(0);"
+          >
+            <img
+              src="carousel1.png"
+              alt="Carousel Image 1"
+              class="w-full h-64 object-cover flex-shrink-0"
+            />
+            <img
+              src="carousel2.png"
+              alt="Carousel Image 2"
+              class="w-full h-64 object-cover flex-shrink-0"
+            />
+            <video
+              class="w-full h-64 object-cover flex-shrink-0"
+              controls
+              preload="metadata"
+            >
+              <source src="carousel3.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <!-- Right Arrow -->
+        <button
+          id="nextBtn"
+          aria-label="Next"
+          class="arrow-btn absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 z-10 select-none"
+        >
+          &#8594;
+        </button>
       </div>
     </section>
 
@@ -64,14 +126,23 @@
         <div class="flex-1">
           <h2 class="text-3xl font-bold mb-6">About Me</h2>
           <p class="text-gray-300 max-w-2xl">
-            Hello! I'm Zetsu, a creator passionate about digital design and web development.
-            I specialize in building sleek, modern experiences using the latest tools and technologies.
+            Hello! I'm Zetsu, a creator passionate about digital design and web
+            development. I specialize in building sleek, modern experiences
+            using the latest tools and technologies.
           </p>
         </div>
         <!-- Images -->
         <div class="flex-shrink-0 flex gap-4">
-          <img src="sideimage1.png" alt="About image 1" class="w-48 lg:w-56 rounded-lg shadow-lg object-contain" />
-          <img src="sideimage2.png" alt="About image 2" class="w-48 lg:w-56 rounded-lg shadow-lg object-contain" />
+          <img
+            src="sideimage1.png"
+            alt="About image 1"
+            class="w-48 lg:w-56 rounded-lg shadow-lg object-contain"
+          />
+          <img
+            src="sideimage2.png"
+            alt="About image 2"
+            class="w-48 lg:w-56 rounded-lg shadow-lg object-contain"
+          />
         </div>
       </div>
     </section>
@@ -80,5 +151,29 @@
     <footer class="bg-black bg-opacity-80 text-center py-6 text-gray-400">
       © 2025 Zetsu's Creations. All rights reserved.
     </footer>
+
+    <script>
+      (() => {
+        const slidesContainer = document.querySelector("#carouselSlides > div");
+        const slides = slidesContainer.children;
+        const totalSlides = slides.length;
+        let currentIndex = 0;
+
+        const updateSlidePosition = () => {
+          const offset = -currentIndex * 100;
+          slidesContainer.style.transform = `translateX(${offset}%)`;
+        };
+
+        document.getElementById("prevBtn").addEventListener("click", () => {
+          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+          updateSlidePosition();
+        });
+
+        document.getElementById("nextBtn").addEventListener("click", () => {
+          currentIndex = (currentIndex + 1) % totalSlides;
+          updateSlidePosition();
+        });
+      })();
+    </script>
   </body>
 </html>
