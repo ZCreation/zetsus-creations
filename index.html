@@ -6,16 +6,16 @@
     <title>Zetsu's Creations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      html, body{
-        height:100%;
-        margin:0;
-      }
+      html, body { height: 100%; margin: 0; }
+      /* Hide scrollbar */
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      /* Arrow buttons */
+      .arrow-btn { background: rgba(31,41,55,.7); width:3rem; height:3rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; color:#fff; cursor:pointer; transition:background .3s; }
+      .arrow-btn:hover { background: rgba(252,211,77,.9); color:#000; }
     </style>
   </head>
-  <body
-    class="bg-cover bg-center bg-no-repeat font-sans text-white"
-    style="background-image: url('/zetsus-creations/background.png'); height:100%;"
-  >
+  <body class="bg-cover bg-center bg-no-repeat font-sans text-white" style="background-image:url('/zetsus-creations/background.png');height:100%;">
     <!-- Navigation -->
     <nav class="fixed w-full top-0 bg-gray-800 bg-opacity-80 shadow z-50">
       <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -29,105 +29,59 @@
       </div>
     </nav>
 
-    <!-- Hero Section with slider and arrows -->
-    <section id="home" class="h-screen flex flex-col items-center justify-start pt-20 px-6 lg:px-20 bg-black bg-opacity-40">
-      <!-- Welcome Text -->
+    <!-- Hero Section with fixed-height slider -->
+    <section id="home" class="h-screen flex flex-col items-center justify-start pt-24 px-6 lg:px-20 bg-black bg-opacity-40">
+      <!-- Welcome -->
       <div class="text-center max-w-lg mb-8">
         <h2 class="text-4xl lg:text-6xl font-bold mb-4">Welcome to Zetsu's Creations</h2>
         <p class="text-lg text-gray-300">Crafting digital experiences with style and precision.</p>
       </div>
 
-      <!-- Carousel Container -->
+      <!-- Slider -->
       <div class="relative w-full max-w-3xl flex items-center justify-center">
-        <!-- Left Arrow -->
-        <button id="prevBtn" aria-label="Previous" class="arrow-btn absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 select-none">&#8592;</button>
+        <button id="prevBtn" aria-label="Previous" class="arrow-btn absolute -left-6 top-1/2 -translate-y-1/2 z-10">&#8592;</button>
 
-        <!-- Slides Wrapper -->
-        <div id="carouselSlides" class="overflow-hidden w-full rounded-lg shadow-lg flex items-center justify-center">
-          <div class="flex transition-transform duration-500 ease-in-out items-center" style="transform: translateX(0);">
-            <img src="full1.png" alt="Carousel Image 1" class="flex-none max-h-84 w-auto object-contain mx-auto rounded-lg" />
-            <img src="full2.png" alt="Carousel Image 2" class="flex-none max-h-84 w-auto object-contain mx-auto rounded-lg" />
-            <video class="flex-none max-h-84 w-auto object-contain mx-auto rounded-lg" controls preload="metadata">
+        <div id="carouselSlides" class="overflow-hidden w-full h-80 rounded-lg shadow-lg">
+          <div class="flex transition-transform duration-500 ease-in-out" style="transform:translateX(0);">
+            <img src="full1.png" alt="Slide 1" class="w-full h-full object-contain flex-none" />
+            <img src="full2.png" alt="Slide 2" class="w-full h-full object-contain flex-none" />
+            <!--<video class="w-full h-full object-contain flex-none" controls preload="metadata">
               <source src="carousel3.mp4" type="video/mp4" />
-            </video>
+            </video> -->
           </div>
         </div>
 
-        <!-- Right Arrow -->
-        <button id="nextBtn" aria-label="Next" class="arrow-btn absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 z-10 select-none">&#8594;</button>
+        <button id="nextBtn" aria-label="Next" class="arrow-btn absolute -right-6 top-1/2 -translate-y-1/2 z-10">&#8594;</button>
       </div>
     </section>
 
-    <script>
-      (() => {
-        const slidesContainer = document.querySelector('#carouselSlides > div');
-        const slides = slidesContainer.children;
-        const totalSlides = slides.length;
-        let currentIndex = 0;
-
-        const updateSlidePosition = () => {
-          const offset = -currentIndex * 100;
-          slidesContainer.style.transform = `translateX(${offset}%)`;
-        };
-
-        document.getElementById('prevBtn').addEventListener('click', () => {
-          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-          updateSlidePosition();
-        });
-
-        document.getElementById('nextBtn').addEventListener('click', () => {
-          currentIndex = (currentIndex + 1) % totalSlides;
-          updateSlidePosition();
-        });
-      })();
-    </script>
-
-    <script>
-      (() => {
-        const slidesContainer = document.querySelector('#carouselSlides > div');
-        const slides = slidesContainer.children;
-        const totalSlides = slides.length;
-        let currentIndex = 0;
-
-        const updateSlidePosition = () => {
-          const offset = -currentIndex * 100;
-          slidesContainer.style.transform = `translateX(${offset}%)`;
-        };
-
-        document.getElementById('prevBtn').addEventListener('click', () => {
-          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-          updateSlidePosition();
-        });
-
-        document.getElementById('nextBtn').addEventListener('click', () => {
-          currentIndex = (currentIndex + 1) % totalSlides;
-          updateSlidePosition();
-        });
-      })();
-    </script>
-
-    <!-- About Section with three images on the right -->
+    <!-- About Section -->
     <section id="about" class="py-20 px-6 lg:px-20 bg-black bg-opacity-60">
-      <div class="flex flex-col lg:flex-row items-start gap-10">
-        <!-- Text -->
+      <div class="flex flex-col lg:flex-row gap-10 items-start">
         <div class="flex-1">
           <h2 class="text-3xl font-bold mb-6">About Me</h2>
-          <p class="text-gray-300 max-w-2xl">
-            Hello! I'm Zetsu, a creator passionate about digital design and web development.
-            I specialize in building sleek, modern experiences using the latest tools and technologies.
-          </p>
+          <p class="text-gray-300 max-w-2xl">Hello! I'm Zetsu, a creator passionate about digital design and web development. I specialize in building sleek, modern experiences using the latest tools and technologies.</p>
         </div>
-        <!-- Images -->
         <div class="flex-shrink-0 flex gap-4">
-          <img src="sideimage1.png" alt="About image 1" class="w-48 lg:w-56 rounded-lg shadow-lg object-contain" />
-          <img src="sideimage2.png" alt="About image 2" class="w-48 lg:w-56 rounded-lg shadow-lg object-contain" />
+          <img src="sideimage1.png" alt="About 1" class="w-48 lg:w-56 object-contain rounded-lg shadow-lg" />
+          <img src="sideimage2.png" alt="About 2" class="w-48 lg:w-56 object-contain rounded-lg shadow-lg" />
+          <img src="sideimage3.png" alt="About 3" class="w-48 lg:w-56 object-contain rounded-lg shadow-lg" />
         </div>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-black bg-opacity-80 text-center py-6 text-gray-400">
-      © 2025 Zetsu's Creations. All rights reserved.
-    </footer>
+    <footer class="bg-black bg-opacity-80 text-center py-6 text-gray-400">© 2025 Zetsu's Creations. All rights reserved.</footer>
+
+    <script>
+      (()=>{
+        const slideTrack=document.querySelector('#carouselSlides>div');
+        const total=slideTrack.children.length;
+        let idx=0;
+        const update=()=>{slideTrack.style.transform=`translateX(${-idx*100}%)`;};
+        document.getElementById('prevBtn').onclick=()=>{idx=(idx-1+total)%total;update();};
+        document.getElementById('nextBtn').onclick=()=>{idx=(idx+1)%total;update();};
+      })();
+    </script>
   </body>
 </html>
